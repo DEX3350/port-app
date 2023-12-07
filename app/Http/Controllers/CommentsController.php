@@ -17,11 +17,23 @@ class CommentsController extends Controller
         $comment->post_id = $post->id;
         $comment->author = $data['author'];
         $comment->text = $data['text'];
+
+        $hashtags = $this->extractHashtags($data['text']);
+        if (!empty($hashtags)) {
+            $comment->hashtags = implode(',', $hashtags);
+        }
         $comment->save();
 
         return back();
 
     }
+    
+    private function extractHashtags($text)
+    {
+        preg_match_all('/#(\w+)/', $text, $matches);
+        return $matches[1] ?? [];
+    }
+
     public function destroy(Comment $comment): RedirectResponse
     {
         $comment->delete();

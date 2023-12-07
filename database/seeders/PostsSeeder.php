@@ -14,6 +14,8 @@ class PostsSeeder extends Seeder
      */
     public function run(): void
     {
-        Post::factory()->count(5)->create();
+        Post::factory()->count(5)->create([
+            'hashtags' => 'auris, India'
+        ]);
     }
 }

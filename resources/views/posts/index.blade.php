@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.apps')
 
 @section('content')
 
@@ -9,9 +9,12 @@
             I am Deepanshu Panwar from the multi-diverse country India.<br>
              My friends in India Call me Deepu and in Japan, Deep<br>
              Here i will tell you all about my life.<br>
-        
         </p>
     </div>
+    
+    @auth
+        <a href="{{ url('/posts/new') }}" class="mt-6 py-2 px-4 w-full border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none justify-center">New Post</a>
+    @endauth
 
     {{-- Posts Wrapper --}}
     <div class="mt-12 grid gap-5 max-w-lg mx-auto lg:grid-cols-3 lg:max-w-none">
@@ -31,28 +34,43 @@
                         </a>
                         <p class="mt-3 text-base leading-6 text-gray-500">
                             @if (strlen($post->text) > 200)
-                                {{ substr($post->text, 0, 200) }}...
+                                {!! preg_replace('/#(\w+)/', '<span class="text-blue-500 font-bold">#$1</span>', substr($post->text, 0, 200)) !!}...
                             @else
-                                {{ $post->text }}
+                                {!! preg_replace('/#(\w+)/', '<span class="text-blue-500 font-bold">#$1</span>', $post->text) !!}
                             @endif
                         </p>
                     </div>
 
-                    <div class="mt-6 flex items-center">
-                        <div class="flex-shrink-0">
-                            <img class="h-10 w-10 rounded-full" src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription01&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="my avatar">
-                        </div>
+                    <div class="mt-6 flex justify-between items-center">
+                        <div>
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <img class="h-10 w-10 rounded-full" src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription01&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="my avatar">
+                                </div>
 
-                        <div class="ml-3">
-                            <p class="text-sm leading-5 font-medium text-gray-900">John Doe</p>
-                            <div class="flex text-sm leading-5 text-gray-500">
-                                <time datetime="{{ $post->created_at }}">
-                                    {{ $post->created_at->diffForHumans() }}
-                                </time>
-                                <span class="mx-1">&middot;</span>
-                                <span>{{ ceil(strlen($post->text) / 863) }} min read</span>
+                                <div class="ml-3">
+                                    <p class="text-sm leading-5 font-medium text-gray-900">Deepanshu Panwar</p>
+                                    <div class="flex text-sm leading-5 text-gray-500">
+                                        <time datetime="{{ $post->created_at }}">
+                                            {{ $post->created_at->diffForHumans() }}
+                                        </time>
+                                        <span class="mx-1">&middot;</span>
+                                        <span>{{ ceil(strlen($post->text) / 863) }} min read</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        @auth
+                            {{-- Buttons --}}
+                            <div class="flex flex-wrap justify-end mt-4">
+                                <a href="{{ route('posts.edit',$post->id) }}" class="text-sm py-1 px-2 mb-2 md:mb-0 md:mr-2 border text-white bg-indigo-400 hover:bg-indigo-700 border-indigo-400 shadow-sm rounded-md hover:shadow-md">Update</a>
+                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-sm py-1 px-2 border text-white bg-red-400 hover:bg-red-700 border-red-400 shadow-sm rounded-md hover:shadow-md">Delete</button>
+                                </form>
+                            </div>
+                        @endauth
                     </div>
                 </div>
             </div>

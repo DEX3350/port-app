@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.apps')
 @section('content')
 
 <div class="bg-gray-50 h-full md:grid md:grid-cols-12">
@@ -11,7 +11,7 @@
                 <input type="text" name="title" class="mt-1 py-2 px-3 block w-full border border-gray-400 rounded-md shadow-sm" value={{ old('title') }} autofocus required>
 
                 <label for="text" class="mt-6 block text-sm font-medium text-gray-700">Text</label>
-                <textarea name="text" class="mt-1 py-2 px-3 block w-full border border-gray-400 rounded-md shadow-sm" required>{{ old('text') }}</textarea>
+                <textarea name="text" class="mt-1 py-2 px-3 block w-full border border-gray-400 rounded-md shadow-sm" required>{{ preg_replace('/#(\w+)/', '<span class="text-blue-500 font-bold">#$1</span>', old('text')) }}</textarea>
 
                 @if($errors->any())
                     <div class="mt-6">

@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.apps')
 @section('content')
 
 <div class="bg-gray-50 py-16 px-4 sm:grid sm:grid-cols-12">
     <div class="sm:col-start-4 sm:col-span-6">
         <a href="/">
-            <div class="bg-white text-center px-4 py-3 rounded-sm shadow-sm hover:shadow-md">Back</div>
+            <div class="bg-blue-50 hover:bg-blue-100 text-center px-4 py-3 rounded-sm shadow-sm hover:shadow-md">Back</div>
         </a>
 
         <div class="bg-white mt-4 px-4 py-6 rounded-sm shadow-sm">
@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="ml-3">
-                    <p class="text-sm leading-5 font-medium text-gray-900">John Doe</p>
+                    <p class="text-sm leading-5 font-medium text-gray-900">Deepanshu Panwar</p>
                     <div class="flex text-sm leading-5 text-gray-500">
                         <time datetime="{{ $post->created_at ?? now() }}">
                             {{ optional($post->created_at)->diffForHumans() ?? 'Date unknown' }}
@@ -30,7 +30,7 @@
             </div>
 
             <h2 class="mt-6 text-4xl leading-10 tracking-tight font-bold text-gray-900 text-center">{{ $post -> title  }}</h2>
-            <p class="mt-6 leading-6 text-gray-500">{{ $post -> text }}</p>
+            <p class="mt-6 leading-6 text-gray-500">{!! preg_replace('/#(\w+)/', '<span class="text-blue-500 font-bold">#$1</span>', nl2br(old('text', $post->text))) !!}</p>
         </div>
         <h2 class="mt-6 text-4xl leading-10 tracking-tight font-bold text-gray-900 text-center">
             Comments
@@ -82,14 +82,15 @@
                     </div>
 
                     <div class="mt-3 px-5 bg-gray-50 rounded-lg">
-                        <p>{{ $comment->text }}</p>
+                        <p>{!! preg_replace('/#(\w+)/', '<span class="text-blue-500 font-bold">#$1</span>', $comment->text) !!}</p>
                     </div>
-
+                    @auth
                     <form action="/comments/{{ $comment->id }}" method="POST" class="mb-0 mt-3">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-sm py-1 px-2 border border-gray-400 shadow-sm rounded-md hover:shadow-md">Delete</button>
+                        <button type="submit" class="text-sm py-1 px-2 text-white bg-red-500 hover:bg-red-700 border border-gray-400 shadow-sm rounded-md hover:shadow-md">Delete</button>
                     </form>
+                    @endauth
 
                 </div>
             @endforeach
